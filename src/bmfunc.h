@@ -805,12 +805,12 @@ unsigned short bitscan(V w, B* bits) BMNOEXCEPT
 {
     static_assert(std::is_unsigned<V>::value, "BM: unsigned type is required");
 #if (defined(__arm__) || defined(__aarch64__))
-    if constexpr (sizeof(V) == 8)
+    if (constexpr (sizeof(V) == 8))
         return bm::bitscan_bsf64(w, bits);
     else
         return bm::bitscan_bsf((bm::word_t)w, bits);
 #else
-    if constexpr (sizeof(V) == 8)
+    if (constexpr (sizeof(V) == 8))
         return bm::bitscan_popcnt64(w, bits);
     else
         return bm::bitscan_popcnt((bm::word_t)w, bits);
@@ -1378,7 +1378,7 @@ template<bool T> struct all_set
         all_set_block() BMNOEXCEPT
         {
             ::memset(_p, 0xFF, sizeof(_p)); // set FULL BLOCK content (all 1s)
-            if constexpr (sizeof(void*) == 8)
+            if (constexpr (sizeof(void*) == 8))
             {
                 const unsigned long long magic_mask = 0xFFFFfffeFFFFfffe;
                 ::memcpy(&_p_fullp, &magic_mask, sizeof(magic_mask));
@@ -1401,7 +1401,7 @@ template<bool T> struct all_set
     static bm::id64_t block_type(const bm::word_t* bp) BMNOEXCEPT
     {
         bm::id64_t type;
-        if constexpr (sizeof(void*) == 8)
+        if (constexpr (sizeof(void*) == 8))
         {
             bm::id64_t w = reinterpret_cast<unsigned long long>(bp);
             type = (w & 3) | // FULL BLOCK or GAP
